@@ -276,7 +276,7 @@ for _,line in pairs( lines ) do
 		print("       " .. strGet )
 
 		-- fetch the file
---		os.execute( strGet )
+		os.execute( strGet )
 
 		-- create a link in the output file
 		fileOut:write("    <a href=\"" .. WGET_DIR .. wgetFileName .. ".html\">" .. line .. "</a><br>\n")
