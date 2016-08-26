@@ -60,8 +60,8 @@ WGET_CMD    = "wget --quiet "
 WGET_DIR    = "results/"         -- write resulting files to this folder; highly recommended!
 
 CHARS_MIN   = 3
-CHARS_EMAIL = "[^%a%d_-[.]@]+"   -- allowed chars for email   : letters, digits, "_", "-", ".", "@"
-CHARS_USER  = "[^%a%d_-]+"       -- allowed chars for username: letters, digits, "_", "-"
+CHARS_EMAIL = "[^%a%d_%-%.@]+"   -- allowed chars for email   : letters, digits, "_", "-", ".", "@"
+CHARS_USER  = "[^%a%d_%-]+"      -- allowed chars for username: letters, digits, "_", "-"
 CHARS_IP    = "[0-9]+[.][0-9]+[.][0-9]+[.][0-9]+" -- minimal IP address detector
 
 
@@ -216,6 +216,8 @@ if not noErr then
 	return -1
 end
 
+-- notice
+print("\n\nANTI SPAM DELAY SET TO " .. QUERY_TIME .. "s\n\n")
 
 -- create an HTML results file with links to the downloaded files
 local fileOut = io.open( HTML_FNAME, "w" )
@@ -224,35 +226,45 @@ if fileOut then
 end
 
 local errors = 0
+local firstTime = true
 -- read line by line from the file and process them
 for _,line in pairs( lines ) do
 	local lsdUrl      = ""
+	
+	print("------")
+	
 	-- remove leading and trailing spaces
 	line = line:snipSpaces()
 	
 	-- try to determine the type of the string (email, username, IP-address)
 	typeStr = getType( line )
 
-	-- some info
-	if typeStr == "email" then
-		io.write("------\nEMAIL: ")
-		lsdUrl = LSD_URL .. LSD_EMAIL .. line
-	elseif typeStr == "username" then
-		io.write("------\nUSER : ")
-		lsdUrl = LSD_URL .. LSD_USER .. line
-	elseif typeStr == "ipaddress" then
-		io.write("------\nIP   : ")
-		lsdUrl = LSD_URL .. LSD_IP .. line
-	else
---		io.write("ERROR: ")
-		errors = errors + 1
-		lsdUrl = ""
-	end
-
 	-- probably better to only process those lines without an error...
 	if typeStr then
 		local strGet      = ""
 		local wgetFileName = createFileName( line )
+
+		-- sleep
+		if firstTime then
+			firstTime = false
+		else
+			io.write("SLEEP: ")
+			io.flush()
+			sleep( QUERY_TIME )
+			print("done")
+		end
+
+		-- some info
+		if typeStr == "email" then
+			io.write("EMAIL: ")
+			lsdUrl = LSD_URL .. LSD_EMAIL .. line
+		elseif typeStr == "username" then
+			io.write("USER : ")
+			lsdUrl = LSD_URL .. LSD_USER .. line
+		elseif typeStr == "ipaddress" then
+			io.write("IP   : ")
+			lsdUrl = LSD_URL .. LSD_IP .. line
+		end
 
 		-- create a command line string
 		strGet = WGET_CMD .. lsdUrl .. " -O " .. WGET_DIR .. wgetFileName .. ".html &"
@@ -264,15 +276,17 @@ for _,line in pairs( lines ) do
 		print("       " .. strGet )
 
 		-- fetch the file
-		os.execute( strGet )
+--		os.execute( strGet )
 
 		-- create a link in the output file
 		fileOut:write("    <a href=\"" .. WGET_DIR .. wgetFileName .. ".html\">" .. line .. "</a><br>\n")
 		fileOut:write("    <a href=\"" .. lsdUrl .. "\">" .. "see at LeakedSource " .. "</a><br><br>\n")
-		
-		-- sleep
-		sleep( QUERY_TIME )
 
+	else
+	 -- none of "email", "username" or "ip" detected
+--		io.write("ERROR: ")
+		print("SKIP : " .. line )
+		errors = errors + 1
 	end
 
 	

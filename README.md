@@ -1,7 +1,7 @@
 lsd.lua
 =======
 
-Idiot's LeakedSource Downloader.
+Idiot's [LeakedSource][1] Downloader.
 
 A quickly hacked together tool to automatically query multiple
 email addresses or user names from the [LeakedSource][1] database.
@@ -25,7 +25,9 @@ Create a single text files, containing all your email addresses and user names
     MeAgain@whatever.net
     Hippie68
     YepItsMe@overhere.org
+    #ThisWillBeIgnored
     MyiMeshTrash
+    #Email@will-be.skipped
 
 and let lsd.lua do the job for you.  
 
@@ -46,6 +48,7 @@ and let lsd.lua do the job for you.
   - login
   - more clever anti spam delay
   - nicer output layout
+  - catch SIGINT and finish writing the HTML output
   - ...
 
 
@@ -81,7 +84,11 @@ So far, lsd.py was "tested" (lol) under
     MeAgain@whatever.net
     Hippie68
     YepItsMe@overhere.org
+    #ThisWillBeIgnored
     MyiMeshTrash
+    #Email@will-be.skipped
+
+  Lines starting with a '#' will be skipped.
 
   Run lsd.py with the file name as argument.  
   If you omit the name, 'lsd-example.txt' will be read.  
