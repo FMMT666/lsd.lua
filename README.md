@@ -1,0 +1,149 @@
+lsd.lua
+=======
+
+Idiot's LeakedSource Downloader.
+
+A quickly hacked together tool to automatically query multiple
+email addresses or user names from the [LeakedSource][1] database.
+
+---
+
+If you would like to know whether any of your accounts were part of the latest
+hacks, data breaches or leaks, there's probably no way around [LeakedSource][1].
+
+They have more than 2 billion leaked accounts stored in their database.
+Just enter your email address or any of your user account names, select the
+search type (email, user name, ...) and click 'search'.
+
+Easy. Unless you have 50 emails and 50 user names.
+
+Here's what lsd.lua can do for you:  
+Create a single text files, containing all your email addresses and user names
+(or IP addresses)
+
+    MeHero@example.com
+    MeAgain@whatever.net
+    Hippie68
+    YepItsMe@overhere.org
+    MyiMeshTrash
+
+and let lsd.lua do the job for you.  
+
+
+---
+## NEWS
+
+### CHANGES 2016/08/26:
+
+    - initial upload; functional as in "evening hack"
+
+
+---
+## TODO
+
+  - turning off downloads
+  - parsing the output
+  - login
+  - more clever anti spam delay
+  - nicer output layout
+  - ...
+
+
+---
+## License
+
+[WTFPL][4] 1.0, March 2000
+
+You are free to do what the fuck you want to public license.
+
+
+---
+## Requirements
+
+  - [Lua][2] interpreter; anything >=5.1 should be fine
+  - [wget][3] downloader
+
+
+So far, lsd.py was "tested" (lol) under
+
+  - Linux, 32 bit, 64 bit
+  - ...
+
+---
+## Usage
+
+  Copy lsd.py in an empty folder and create a subdirectory named 'results'.
+
+  Create a text file containing all your email addresses or user names, one per line, let's
+  assume 'mydata.txt':
+
+    MeHero@example.com
+    MeAgain@whatever.net
+    Hippie68
+    YepItsMe@overhere.org
+    MyiMeshTrash
+
+  Run lsd.py with the file name as argument.  
+  If you omit the name, 'lsd-example.txt' will be read.  
+  
+    lua lsd.lua mydata.txt
+
+  Or make it executable (Un*x only):
+
+    chmod +x lsd.lua
+
+  After that, you should be able to just type
+
+    lsd.lua mydata.txt
+  
+  If that doesn't work, adjust the first line of lsd.lua
+
+    #!/usr/bin/lua
+
+  and point it to your Lua interpreter, e.g.:
+  
+    #!/usr/bin/lua5.3
+    #!/usr/bin/lua5.2
+    #!/usr/local/bin/luaMeh
+
+  Right now, lsd.lua does nothing else but
+
+  1) download the web page with the results to the subfolder you created; one file per account, user name or IP address
+  2) create a HTML file containing links to the downloaded file as well as to the LeakedSource web site
+
+  The output file names are the email addresses, user names or IP addresses with special characters removed.  
+  E.g.
+
+    Hehe@here.org    ->    Hehe_at_here_org
+    192.186.1.1      ->    192_168_1_1
+
+  ...
+  
+  HTML parser pending :-)
+
+  ...
+
+---
+## Limitations
+
+  - so far only email, user name and IP-address are supported
+  - type detection (email, user name and IP address) might have limitations
+  - no spaces in user names
+  - no dots in user names
+  - no IP address range checks; enter BS, get BS...
+  - no IP address wildcards
+  - suppressed the error output right now (illegal email addresses or user names)
+  - resulting files will be overwritten without warning or backup
+  - ...
+
+
+---
+Have fun  
+FMMT666(ASkr)  
+
+
+
+[1]: https://www.leakedsource.com
+[2]: https://www.lua.org
+[3]: https://www.gnu.org/software/wget
+[4]: https://en.wikipedia.org/wiki/WTFPL
