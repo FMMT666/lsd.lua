@@ -68,7 +68,7 @@ You are free to do what the fuck you want to public license.
   - [wget][3] downloader
 
 
-So far, lsd.py was "tested" (lol) under
+So far, lsd.lua was "tested" (lol) under
 
   - Linux, 32 bit, 64 bit
   - ...
@@ -92,7 +92,7 @@ So far, lsd.py was "tested" (lol) under
 
   Lines starting with a '#' will be skipped.
 
-  Run lsd.py with the file name as argument.  
+  Run lsd.lua with the file name as argument.  
   If you omit the name, 'lsd-example.txt' will be read.  
   
     lua lsd.lua mydata.txt
