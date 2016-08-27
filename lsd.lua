@@ -11,36 +11,6 @@
 -- www.askrprojects.net
 --
 
---
--- REQUIREMENTS:
---
---  - a Lua interpreter (>=5.1)
---  - wget
---
-
---
--- USAGE:
---
---  - to be written
---
-
---
--- LIMITATIONS:
---
---  - type detection (email, user name and IP address) have limitations
---  - no spaces in user names
---  - no dots in user names
---  - no IP address range checks
---  - no IP address wildcards
---  - resulting files will be overwritten without warning or backup
---  - ...
---
-
---
--- TODO:
---
---  - create output file folder (wget yet throws an error if that doesn't exist)
---
 
 --
 -- NOTES:
@@ -63,7 +33,7 @@ WGET_DIR    = "results/"         -- write resulting files to this folder; highly
 CHARS_MIN   = 3
 CHARS_EMAIL = "[^%a%d_%-%.@]+"   -- allowed chars for email   : letters, digits, "_", "-", ".", "@"
 CHARS_USER  = "[^%a%d_%-]+"      -- allowed chars for username: letters, digits, "_", "-"
-CHARS_IP    = "[0-9]+[.][0-9]+[.][0-9]+[.][0-9]+" -- minimal IP address detector
+CHARS_IP    = "[0-9]+%.[0-9]+%.[0-9]+%.[0-9]+" -- minimal IP address detector
 
 
 HTML_FNAME  = "lsd-results.html" -- name of the HTML file for results (links)
@@ -153,7 +123,7 @@ function getType( line )
   	elseif line:find("@.*@") then
   		return nil
   	-- two adjacent "." ("..")
-  	elseif line:find("[.][.]") then
+  	elseif line:find("%.%.") then
   		return nil
   	else
   		return "email"
@@ -161,7 +131,7 @@ function getType( line )
   end -- end email check
 
 	-- check fo a username (method: no dots or spaces allowed)
-	if not line:match("[.]") then
+	if not line:match("%.") then
 		-- any invalid characters?
   	if line:match( CHARS_USER ) then
   		return nil
@@ -190,7 +160,7 @@ end
 function createFileName( rawName )
 	local retName
 	retName = rawName:gsub("@", "_at_")
-	retName = retName:gsub("[.]", "-")
+	retName = retName:gsub("%.", "-")
 	return retName
 end
 
