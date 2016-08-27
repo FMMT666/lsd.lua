@@ -38,7 +38,7 @@ and let lsd.lua do the job for you.
 ### CHANGES 2016/08/27:
 
     - fixed some regex stuff
-    - downloading via wget is not turned off by default (enable with "-load")
+    - downloading via wget is now turned off by default (enable with "-load")
     - slightly nicer HTML output
 
 ### CHANGES 2016/08/26:
