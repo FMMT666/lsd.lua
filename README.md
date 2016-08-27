@@ -35,6 +35,12 @@ and let lsd.lua do the job for you.
 ---
 ## NEWS
 
+### CHANGES 2016/08/27:
+
+    - fixed some regex stuff
+    - downloading via wget is not turned off by default (enable with "-load")
+    - slightly nicer HTML output
+
 ### CHANGES 2016/08/26:
 
     - initial upload; functional as in "evening hack"
@@ -43,12 +49,9 @@ and let lsd.lua do the job for you.
 ---
 ## TODO
 
-  - just notices some further regex errors ([.][.])
-  - turning off downloads
   - parsing the output
   - login
   - more clever anti spam delay
-  - nicer output layout
   - catch SIGINT and finish writing the HTML output
   - ...
 
@@ -129,16 +132,13 @@ So far, lsd.lua was "tested" (lol) under
   The output file names are the email addresses, user names or IP addresses with special characters removed.  
   E.g.
 
-    Hehe@here.org    ->    Hehe_at_here_org.html
-    192.186.1.1      ->    192_168_1_1.html
+    Hehe@here.org    ->    Hehe_at_here-org.html
+    192.186.1.1      ->    192-168-1-1.html
 
-
-
-  ...
-  
-  HTML parser pending :-)
+  That doesn't look that nice, but it's probably safer for systems that don't like that many dots...
 
   ...
+
 
 ---
 ## Parameters
@@ -159,7 +159,6 @@ So far, lsd.lua was "tested" (lol) under
   - no dots in user names
   - no IP address range checks; enter BS, get BS...
   - no IP address wildcards
-  - suppressed the error output right now (illegal email addresses or user names)
   - resulting files will be overwritten without warning or backup
   - ...
 

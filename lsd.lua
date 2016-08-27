@@ -45,9 +45,8 @@ HTML_PRE    = "<!DOCTYPE html>\
     <title>lsd.lua results</title>\
   </head>\
   <body>\
-		<h1>LeakedSource Results found by lsd.lua</h1>\n<br><br>\n"
-HTML_RES    = "<br>"             -- where we will fill in the found content
-HTML_POST   = "\n  </body>\
+		<h1>LeakedSource Results Links</h1>\n<br><br>\n"
+HTML_POST   = "\n    <br><br>\n  </body>\
 </html>"
 
 
@@ -295,12 +294,15 @@ for _,line in pairs( lines ) do
 		end
 
 		-- create a link in the output file
-		fileOut:write("    <a href=\"" .. WGET_DIR .. wgetFileName .. ".html\">" .. line .. "</a><br>\n")
-		fileOut:write("    <a href=\"" .. lsdUrl .. "\">" .. "see at LeakedSource " .. "</a><br><br>\n")
+		fileOut:write("    <p style=\"margin-left:2em\">" .. line .. "</p>\n")
+		
+		if Load then
+			fileOut:write("    <p style=\"margin-left:4em\"> \nlocal file: <a href=\"" .. WGET_DIR .. wgetFileName .. ".html\">" .. WGET_DIR .. wgetFileName .. "</a></p>\n")
+		end
+		fileOut:write("    <p style=\"margin-left:4em\"> \nremote link: <a href=\"" .. lsdUrl .. "\">" .. "see at LeakedSource " .. "</a><br></p>\n")
 
 	else
 	 -- none of "email", "username" or "ip" detected
---		io.write("ERROR: ")
 		print("SKIP : " .. line )
 		errors = errors + 1
 	end
