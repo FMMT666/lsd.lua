@@ -43,6 +43,7 @@ and let lsd.lua do the job for you.
 ---
 ## TODO
 
+  - just notices some further regex errors ([.][.])
   - turning off downloads
   - parsing the output
   - login
@@ -75,7 +76,8 @@ So far, lsd.py was "tested" (lol) under
 ---
 ## Usage
 
-  Copy lsd.py in an empty folder and create a subdirectory named 'results'.
+  Copy lsd.py in an empty folder and create a subdirectory named 'results'.  
+  If you just "cloned" from Git, it's already there...
 
   Create a text file containing all your email addresses or user names, one per line, let's
   assume 'mydata.txt':
@@ -101,7 +103,7 @@ So far, lsd.py was "tested" (lol) under
 
   After that, you should be able to just type
 
-    lsd.lua mydata.txt
+    ./lsd.lua mydata.txt
   
   If that doesn't work, adjust the first line of lsd.lua
 
@@ -113,22 +115,40 @@ So far, lsd.py was "tested" (lol) under
     #!/usr/bin/lua5.2
     #!/usr/local/bin/luaMeh
 
-  Right now, lsd.lua does nothing else but
+  If called without any other arguments, lsd.lua does nothing else but create a HTML file "lsd-results.html",
+  containing querying links to the LeakedSource web site.
+  
+  If you want to automatically download the LeakedSource result pages, just add a
 
-  1) download the web page with the results to the subfolder you created; one file per account, user name or IP address
-  2) create a HTML file containing links to the downloaded file as well as to the LeakedSource web site
+    -load
+
+  parameter anywhere:
+
+    ./lsd.lua mydata.txt -load
 
   The output file names are the email addresses, user names or IP addresses with special characters removed.  
   E.g.
 
-    Hehe@here.org    ->    Hehe_at_here_org
-    192.186.1.1      ->    192_168_1_1
+    Hehe@here.org    ->    Hehe_at_here_org.html
+    192.186.1.1      ->    192_168_1_1.html
+
+
 
   ...
   
   HTML parser pending :-)
 
   ...
+
+---
+## Parameters
+
+  The order of parameters and file name is arbitrary.
+
+     name    name of file to load;
+             if multiple arguments without '-' are given, the last one is used.
+    -load    also download each result file from LeakedSource; off by default
+
 
 ---
 ## Limitations

@@ -48,6 +48,7 @@
 --  - This code uses tabs. Tabs everywhere. Get used to it :-P
 --
 
+LOAD        = false              -- if false (default) files are not fetched from LeakedSource; only results file is written
 
 QUERY_TIME  = 10                 -- anti spam detection delay
 
@@ -194,30 +195,73 @@ function createFileName( rawName )
 end
 
 
+--------------------------------------------------------------------------------------------------
+-- sortArgs( args )
+-- Minimal command line argument check.
+-- Options or parameters start with a '-'. The last argument without that becomes the file name.
+-- RETURNS:
+-- { <filename>, <opt1>, <opt2>, ... }
+-- If no file name is given, it is replaced with an empty string { "", ... }.
+--------------------------------------------------------------------------------------------------
+function sortArgs( args )
+	local ret = { "" }
+	local i = 2
+
+	for _,v in ipairs( args ) do
+		if v:match("^[%-]") then
+			ret[i] = v
+			i = i + 1
+		else
+			ret[1] = v
+		end
+	end
+
+	return ret
+end
+
+
 
 --------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------
+
+print("\n")
+
+-- sort command line arguments
+myArgs = sortArgs( arg )
+
+-- check command line arguments
+for i = 2,#myArgs do
+	if myArgs[i] == "-load" then
+		LOAD = true
+	end
+end
+
+-- some output
+print("LOAD : " .. tostring(LOAD) )
 
 -- check file name argument
-if arg[1] == nil then
-	print("No file name specified.")
+io.write("FILE : ")
+if myArgs[1] == "" then
 	filename = "lsd-example.txt"
 else
-	filename = arg[1]
+	filename = myArgs[1]
 end
+print( filename )
 
 -- load file
 noErr, lines = pcall( loadFile, filename )
 
 if not noErr then
-	print("ERROR opening file '" .. filename .. "'")
-	print("exiting...")
+	print("FILE : ERROR opening file '" .. filename .. "'")
+	print("EXIT : *burp*")
 	return -1
 end
 
 -- notice
-print("\n\nANTI SPAM DELAY SET TO " .. QUERY_TIME .. "s\n\n")
+if LOAD then
+	print("DELAY: " .. QUERY_TIME .. "s\n\n")
+end
 
 -- create an HTML results file with links to the downloaded files
 local fileOut = io.open( HTML_FNAME, "w" )
@@ -245,7 +289,7 @@ for _,line in pairs( lines ) do
 		local wgetFileName = createFileName( line )
 
 		-- sleep
-		if firstTime then
+		if firstTime or not LOAD then
 			firstTime = false
 		else
 			io.write("SLEEP: ")
@@ -276,7 +320,9 @@ for _,line in pairs( lines ) do
 		print("       " .. strGet )
 
 		-- fetch the file
-		os.execute( strGet )
+		if LOAD then
+			os.execute( strGet )
+		end
 
 		-- create a link in the output file
 		fileOut:write("    <a href=\"" .. WGET_DIR .. wgetFileName .. ".html\">" .. line .. "</a><br>\n")
