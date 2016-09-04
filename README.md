@@ -27,6 +27,7 @@ Create a single text files, containing all your email addresses and user names
     YepItsMe@overhere.org
     #ThisWillBeIgnored
     MyiMeshTrash
+    ### <- creates a nice ruler in the HTML ouput
     #Email@will-be.skipped
 
 and let lsd.lua do the job for you.  
@@ -34,6 +35,10 @@ and let lsd.lua do the job for you.
 
 ---
 ## NEWS
+
+### CHANGES 2016/09/04:
+
+    - lines starting with ### will now create a ruler in the HTML output
 
 ### CHANGES 2016/08/27:
 
@@ -94,6 +99,8 @@ So far, lsd.lua was "tested" (lol) under
     #Email@will-be.skipped
 
   Lines starting with a '#' will be skipped.
+  
+  Lines starting with a '###' will create an horizontal ruler in the HTML output file.
 
   Run lsd.lua with the file name as argument.  
   If you omit the name, 'lsd-example.txt' will be read.  

@@ -48,7 +48,7 @@ HTML_PRE    = "<!DOCTYPE html>\
 		<h1>LeakedSource Results Links</h1>\n<br><br>\n"
 HTML_POST   = "\n    <br><br>\n  </body>\
 </html>"
-
+HTML_RULER  = "  <hr style=\"background:#444444; border:0; height:3px\">\n"
 
 --------------------------------------------------------------------------------------------------
 -- sleep( n )
@@ -94,18 +94,25 @@ end
 
 --------------------------------------------------------------------------------------------------
 -- getType( line )
--- Tries to determine if the given <line> is an email address, a user name or an IP address.
+-- Tries to determine if the given <line> is an email address, a user name, an IP address
+-- or a ruler or whatever...
 -- 
 -- RETURNS:
 --  "email"     - for email
 --  "username"  - for user name
 --  "ipaddress" - for an IP address
+--  "ruler"     - insert an horizontal ruler tag in the HTML output (triggered via a '###')
 --  nil         - for an error
 --------------------------------------------------------------------------------------------------
 function getType( line )
 	-- check length
 	if #line < CHARS_MIN then
 		return nil
+	end
+
+	-- check for a horizontal ruler
+	if line:match("^###") then
+		return "ruler"
 	end
 
 	-- do not allow any further spaces now
@@ -253,7 +260,7 @@ for _,line in pairs( lines ) do
 	typeStr = getType( line )
 
 	-- probably better to only process those lines without an error...
-	if typeStr then
+	if typeStr == "email" or typeStr == "username" or typeStr == "ipaddress" then
 		local strGet      = ""
 		local wgetFileName = createFileName( line )
 
@@ -302,9 +309,16 @@ for _,line in pairs( lines ) do
 		fileOut:write("    <p style=\"margin-left:4em\"> \nremote link: <a href=\"" .. lsdUrl .. "\">" .. "see at LeakedSource " .. "</a><br></p>\n")
 
 	else
-	 -- none of "email", "username" or "ip" detected
-		print("SKIP : " .. line )
-		errors = errors + 1
+		-- was it a ruler command?
+		if typeStr == "ruler" then
+			print("RULER: ###")
+			fileOut:write( HTML_RULER )
+		
+		-- none of "email", "username", "ip" or "ruler" detected
+		else
+			print("SKIP : " .. line )
+			errors = errors + 1
+		end
 	end
 
 	
