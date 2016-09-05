@@ -1,17 +1,24 @@
 lsd.lua
 =======
 
-Idiot's [LeakedSource][1] Downloader.
+Idiot's [LeakedSource][1] and [HaveIBeenPwned][5] Downloader.
+
+TL;DR:  
+This is simply a text file (with emails/usernames/...) to HTML converter.
 
 A quickly hacked together tool to automatically query multiple
-email addresses or user names from the [LeakedSource][1] database.
+email addresses or user names from the [LeakedSource][1] database.  
+Although there exist plently of other tools to query HaveIBeenPwned,
+via its nice (and free) API, I included that here too.
 
 ---
 
 If you would like to know whether any of your accounts were part of the latest
-hacks, data breaches or leaks, there's probably no way around [LeakedSource][1].
+hacks, data breaches or leaks, there's probably no way around sites like [LeakedSource][1]
+or [HaveIBeenPwned][5]
 
-They have more than 2 billion leaked accounts stored in their database.
+
+They have (m/b)illion leaked accounts stored in their databases.
 Just enter your email address or any of your user account names, select the
 search type (email, user name, ...) and click 'search'.
 
@@ -34,7 +41,20 @@ and let lsd.lua do the job for you.
 
 
 ---
+## Why Lua?
+
+My tools, my rules :-P  
+Had to refresh my Lua knowledge for that [PIC32Lua MZ][6] thingy, and why easy if you can do the
+same more complicated? Lol...
+
+
+---
 ## NEWS
+
+### CHANGES 2016/09/06:
+
+    - added preliminary HaveIBeenPwned links
+
 
 ### CHANGES 2016/09/04:
 
@@ -54,8 +74,9 @@ and let lsd.lua do the job for you.
 ---
 ## TODO
 
-  - parsing the output
+  - parsing the HIBP output
   - login
+  - cURL in Lua
   - more clever anti spam delay
   - catch SIGINT and finish writing the HTML output
   - ...
@@ -180,3 +201,5 @@ FMMT666(ASkr)
 [2]: https://www.lua.org
 [3]: https://www.gnu.org/software/wget
 [4]: https://en.wikipedia.org/wiki/WTFPL
+[5]: https://haveibeenpwned.com
+[6]: https://github.com/FMMT666/PIC32LuaMZ

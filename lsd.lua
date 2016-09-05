@@ -27,6 +27,8 @@ LSD_EMAIL   = "?email="
 LSD_USER    = "?username="
 LSD_IP      = "?ip="
 
+HIBP_URL    = "https://haveibeenpwned.com/api/v2/breachedaccount/"
+
 WGET_CMD    = "wget --quiet "
 WGET_DIR    = "results/"         -- write resulting files to this folder; highly recommended!
 
@@ -249,7 +251,8 @@ local errors = 0
 local firstTime = true
 -- read line by line from the file and process them
 for _,line in pairs( lines ) do
-	local lsdUrl      = ""
+	local lsdUrl = ""
+	local hibUrl = ""
 	
 	print("------")
 	
@@ -277,10 +280,12 @@ for _,line in pairs( lines ) do
 		-- some info
 		if typeStr == "email" then
 			io.write("EMAIL: ")
-			lsdUrl = LSD_URL .. LSD_EMAIL .. line
+			lsdUrl = LSD_URL  .. LSD_EMAIL .. line
+			hibUrl = HIBP_URL .. line
 		elseif typeStr == "username" then
 			io.write("USER : ")
 			lsdUrl = LSD_URL .. LSD_USER .. line
+			hibUrl = HIBP_URL .. line
 		elseif typeStr == "ipaddress" then
 			io.write("IP   : ")
 			lsdUrl = LSD_URL .. LSD_IP .. line
@@ -306,7 +311,11 @@ for _,line in pairs( lines ) do
 		if Load then
 			fileOut:write("    <p style=\"margin-left:4em\"> \nlocal file: <a href=\"" .. WGET_DIR .. wgetFileName .. ".html\">" .. WGET_DIR .. wgetFileName .. "</a></p>\n")
 		end
-		fileOut:write("    <p style=\"margin-left:4em\"> \nremote link: <a href=\"" .. lsdUrl .. "\">" .. "see at LeakedSource " .. "</a><br></p>\n")
+		fileOut:write("    <p style=\"margin-left:4em\"> \nremote link: <a href=\"" .. lsdUrl .. "\">" .. "see at LeakedSource   " .. "</a><br></p>\n")
+		
+		if hibUrl ~= "" then
+			fileOut:write("    <p style=\"margin-left:4em\"> \nremote link: <a href=\"" .. hibUrl .. "\">" .. "see at HaveIBeenPwned " .. "</a><br></p>\n")
+		end
 
 	else
 		-- was it a ruler command?
